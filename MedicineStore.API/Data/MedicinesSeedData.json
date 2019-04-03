@@ -1,0 +1,10 @@
+﻿[
+  {
+    "Name":  "Test1",
+    "Description": "Test1",
+    "GrossPrice":  "100.00",
+    "SpecialGrossPrice":  "80.0",
+    "IsDeleted": 0,
+    "IsActive": 1
+  }
+]
