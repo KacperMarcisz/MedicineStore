@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicineStore.API", "MedicineStore.API\MedicineStore.API.csproj", "{FE108CA0-D81D-4CF0-8E60-C1A3F01EA157}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicineStore.WEB", "MedicineStore.WEB\MedicineStore.WEB.csproj", "{A2E45265-D70E-41FB-8AAA-DDC67017586C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FE108CA0-D81D-4CF0-8E60-C1A3F01EA157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE108CA0-D81D-4CF0-8E60-C1A3F01EA157}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE108CA0-D81D-4CF0-8E60-C1A3F01EA157}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE108CA0-D81D-4CF0-8E60-C1A3F01EA157}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2E45265-D70E-41FB-8AAA-DDC67017586C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2E45265-D70E-41FB-8AAA-DDC67017586C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2E45265-D70E-41FB-8AAA-DDC67017586C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2E45265-D70E-41FB-8AAA-DDC67017586C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DB3950A6-90AA-4110-884F-F5780096BE58}
+	EndGlobalSection
+EndGlobal
