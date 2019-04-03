@@ -30,14 +30,18 @@
         }
 
         [HttpGet("{id}")]
-        public ActionResult<string> GetDetails(int id)
+        public async Task<IActionResult> GetDetails(int id)
         {
-            return "value";
+            var medicineFromRepo = await _repo.GetMedicine(id);
+            var medicine = _mapper.Map<MedicineDetailsViewModel>(medicineFromRepo);
+
+            return Ok(medicine);
         }
 
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] string value)
         {
+
         }
 
         [HttpPut("{id}")]

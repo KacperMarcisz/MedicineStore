@@ -44,8 +44,7 @@ namespace MedicineStore.API
             }
 
             //seeder.SeedMedicines();
-
-            app.UseHttpsRedirection();
+            
             app.UseMvc();
         }
     }

@@ -9,6 +9,7 @@
         public AutoMapperProfiles()
         {
             CreateMap<Medicine, MedicineHeaderViewModel>();
+            CreateMap<Medicine, MedicineDetailsViewModel>();
         }
     }
 }

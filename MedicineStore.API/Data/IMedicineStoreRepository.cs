@@ -8,5 +8,6 @@ namespace MedicineStore.API.Data
     public interface IMedicineStoreRepository
     {
         Task<IEnumerable<Medicine>> GetAllMedicines();
+        Task<Medicine> GetMedicine(int id);
     }
 }

@@ -8,18 +8,27 @@ using MedicineStore.WEB.Models;
 
 namespace MedicineStore.WEB.Controllers
 {
+    using System.Net.Http;
+    using CORE.ViewModels;
+
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
+            IEnumerable<MedicineHeaderViewModel> model = null;
+            using (var client = new HttpClient())
+            {
+                var response = await client.GetAsync("http://localhost:5000/api/medicines");
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+                if (response.IsSuccessStatusCode)
+                {
+                    model = await response.Content.ReadAsAsync<IEnumerable<MedicineHeaderViewModel>>();
+                }
+            }
 
+            return View(model);
+        }
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
