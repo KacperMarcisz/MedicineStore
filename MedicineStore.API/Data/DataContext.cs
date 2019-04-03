@@ -9,6 +9,7 @@ namespace MedicineStore.API.Data
         #region Properties
 
         public DbSet<Medicine> Medicines { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         #endregion
 

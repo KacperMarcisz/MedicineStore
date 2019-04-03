@@ -1,5 +1,7 @@
 ﻿namespace MedicineStore.API.Models
 {
+    using System.Collections.Generic;
+
     public class Medicine
     {
         public int Id { get; set; }
@@ -9,5 +11,6 @@
         public decimal SpecialGrossPrice { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
+        public ICollection<Image> Images { get; set; }
     }
 }

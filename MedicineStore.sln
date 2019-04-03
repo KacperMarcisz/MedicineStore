@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicineStore.API", "Medici
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicineStore.WEB", "MedicineStore.WEB\MedicineStore.WEB.csproj", "{A2E45265-D70E-41FB-8AAA-DDC67017586C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicineStore.CORE", "MedicineStore.CORE\MedicineStore.CORE.csproj", "{EC35B3FB-44D2-461D-87BC-AFBC826809CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A2E45265-D70E-41FB-8AAA-DDC67017586C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2E45265-D70E-41FB-8AAA-DDC67017586C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2E45265-D70E-41FB-8AAA-DDC67017586C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC35B3FB-44D2-461D-87BC-AFBC826809CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC35B3FB-44D2-461D-87BC-AFBC826809CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC35B3FB-44D2-461D-87BC-AFBC826809CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC35B3FB-44D2-461D-87BC-AFBC826809CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
