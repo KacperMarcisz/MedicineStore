@@ -2,13 +2,17 @@
 namespace MedicineStore.API.Data
 {
     using Microsoft.EntityFrameworkCore;
+    using Models;
 
     public class DataContext : DbContext
     {
-        public DataContext()
-        {
-            
-        }
+        #region Properties
+
+        public DbSet<Medicine> Medicines { get; set; }
+
+        #endregion
+
+        public DataContext() { }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         { }
@@ -16,6 +20,15 @@ namespace MedicineStore.API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Medicine>()
+                .Property(x => x.Description)
+                .IsRequired()
+                .HasMaxLength(5000);
+            modelBuilder.Entity<Medicine>()
+                .Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(255);
         }
     }
 }
