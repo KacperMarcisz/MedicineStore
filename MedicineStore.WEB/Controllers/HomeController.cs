@@ -10,23 +10,17 @@ namespace MedicineStore.WEB.Controllers
 {
     using System.Net.Http;
     using CORE.ViewModels;
+    using RestSharp;
 
     public class HomeController : Controller
     {
         public async Task<IActionResult> Index()
         {
-            IEnumerable<MedicineHeaderViewModel> model = null;
-            using (var client = new HttpClient())
-            {
-                var response = await client.GetAsync("http://localhost:5000/api/medicines");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    model = await response.Content.ReadAsAsync<IEnumerable<MedicineHeaderViewModel>>();
-                }
-            }
-
-            return View(model);
+            var restClient = new RestClient("http://localhost:5000");
+            var request = new RestRequest("api/medicines", Method.GET);
+            var result = restClient.Execute<List<MedicineHeaderViewModel>>(request).Data;
+            
+            return View(result);
         }
 
         public IActionResult AddMedicine()
@@ -34,6 +28,30 @@ namespace MedicineStore.WEB.Controllers
             return View();
         }
 
+        public async Task<IActionResult> MedicineDetails(int id)
+        {
+            var restClient = new RestClient("http://localhost:5000");
+            var request = new RestRequest($"api/medicines/{id}", Method.GET);
+            var result = restClient.Execute<MedicineDetailsViewModel>(request).Data;
+            
+            return View(result);
+        }
+
+        public async Task<IActionResult> EditMedicine(int id)
+        {
+            var restClient = new RestClient("http://localhost:5000");
+            var request = new RestRequest($"api/medicines/{id}", Method.GET);
+            var result = restClient.Execute<MedicineDetailsViewModel>(request).Data;
+            
+            return View(result);
+        }
+
+
+        public async Task<IActionResult> DeleteMedicine(int id)
+        {
+
+        }
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
