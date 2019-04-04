@@ -41,7 +41,7 @@
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] string value)
         {
-
+            return BadRequest();
         }
 
         [HttpPut("{id}")]

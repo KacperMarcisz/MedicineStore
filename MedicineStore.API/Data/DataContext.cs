@@ -30,6 +30,9 @@ namespace MedicineStore.API.Data
                 .Property(x => x.Name)
                 .IsRequired()
                 .HasMaxLength(255);
+            modelBuilder.Entity<Image>()
+                .Property(x => x.Url)
+                .IsRequired();
         }
     }
 }

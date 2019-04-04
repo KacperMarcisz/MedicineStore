@@ -9,5 +9,6 @@
         public bool IsMain { get; set; }
         public int MedicineId { get; set; }
         public virtual Medicine Medicine { get; set;}
+        public string Url { get; set; }
     }
 }
