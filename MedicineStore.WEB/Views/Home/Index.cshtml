@@ -10,9 +10,10 @@
 
 <div class="album py-5 bg-light">
     <div class="container">
-        @foreach (var medicine in Model)
-        {
-            <div class="row">
+        <div class="row">
+            @foreach (var medicine in Model)
+            {
+
                 <div class="col-md-4">
                     <div class="card mb-4 box-shadow">
                         <img class="card-img-top" src="@(string.IsNullOrEmpty(medicine.ImageUrl) ? "/default-pro.jpg" : medicine.ImageUrl)" alt="@medicine.Name">
@@ -20,27 +21,28 @@
                             <p class="card-text">@medicine.Name</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Details</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                                    <a href="@Url.Action("MedicineDetails", new { id = medicine.Id})"><button type="button" class="btn btn-sm btn-outline-secondary">Details</button></a>
+                                    <a href="@Url.Action("EditMedicine", new { id = medicine.Id})"><button type="button" class="btn btn-sm btn-outline-secondary">Edit</button></a>
                                 </div>
                                 <div>
                                     @if (medicine.SpecialGrossPrice != 0.0m)
                                     {
                                         <small class="text-muted">
-                                            <s>@medicine.GrossPrice zł</s> <br />
+                                            <s>@medicine.GrossPrice.ToString("F") zł</s> <br />
                                         </small>
-                                        @medicine.SpecialGrossPrice <text> zł</text>
+                                        @medicine.SpecialGrossPrice.ToString("F") <text> zł</text>
                                     }
                                     else
                                     {
-                                        @medicine.GrossPrice <text> zł</text>
+                                        @medicine.GrossPrice.ToString("F") <text> zł</text>
                                     }
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        }
+
+            }
+        </div>
     </div>
 </div>

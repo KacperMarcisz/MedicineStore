@@ -6,6 +6,7 @@
     using CORE.ViewModels;
     using Data;
     using Microsoft.AspNetCore.Mvc;
+    using Models;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -39,9 +40,17 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] MedicineDetailsViewModel model)
         {
-            return BadRequest();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var medicine = _mapper.Map<Medicine>(model);
+            //await _repo.EditMedicine(medicine);
+
+            return Ok();
         }
 
         [HttpPut("{id}")]

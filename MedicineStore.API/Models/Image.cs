@@ -10,5 +10,6 @@
         public int MedicineId { get; set; }
         public virtual Medicine Medicine { get; set;}
         public string Url { get; set; }
+        public string PublicId { get; set; }
     }
 }

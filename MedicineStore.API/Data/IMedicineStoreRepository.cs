@@ -9,5 +9,7 @@ namespace MedicineStore.API.Data
     {
         Task<IEnumerable<Medicine>> GetAllMedicines();
         Task<Medicine> GetMedicine(int id);
+        Task<Image> GetImage(int id);
+        Task<bool> SaveAll();
     }
 }
