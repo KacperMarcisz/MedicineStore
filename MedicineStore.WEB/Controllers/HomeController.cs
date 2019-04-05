@@ -81,9 +81,11 @@ namespace MedicineStore.WEB.Controllers
         {
             var restClient = new RestClient("http://localhost:5000");
             var request = new RestRequest($"api/medicines/{model.Id}", Method.PUT);
+            request.RequestFormat = DataFormat.Json;
+            request.AddBody(model);
             restClient.Execute<MedicineDetailsViewModel>(request);
 
-            return null;
+            return RedirectToAction("Index");
         }
 
         [HttpPost("UploadFile")]

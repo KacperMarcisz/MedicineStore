@@ -49,8 +49,15 @@
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] MedicineDetailsViewModel model)
         {
+            var medicineFromRepo = await _repo.GetMedicineAsync(id);
+            _mapper.Map(model, medicineFromRepo);
+
+            if (await _repo.SaveAllAsync())
+                return NoContent();
+
+            return BadRequest();
         }
 
         [HttpDelete("{id}")]

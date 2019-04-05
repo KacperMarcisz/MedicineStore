@@ -1,9 +1,9 @@
 ﻿namespace MedicineStore.API.Helpers
 {
-    using System.Linq;
     using AutoMapper;
     using CORE.ViewModels;
     using Models;
+    using System.Linq;
 
     public class AutoMapperProfiles : Profile
     {
@@ -20,6 +20,7 @@
                     opt.MapFrom(src => src.Images.FirstOrDefault(x => x.IsMain).Url);
                 });
             CreateMap<AddMedicineViewModel, Medicine>();
+            CreateMap<MedicineDetailsViewModel, Medicine>();
         }
     }
 }
