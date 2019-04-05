@@ -61,14 +61,17 @@
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            await _repo.DeleteAsync(id);
+            
+            return Ok();
         }
 
-        [HttpPatch]
-        public void Patch()
-        {
+        // [HttpPatch]
+        // public void Patch()
+        // {
 
-        }
+        // }
     }
 }

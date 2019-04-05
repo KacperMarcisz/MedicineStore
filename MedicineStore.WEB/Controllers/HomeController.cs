@@ -104,11 +104,14 @@ namespace MedicineStore.WEB.Controllers
 
             return Ok();
         }
-
-
+        
         public async Task<IActionResult> DeleteMedicine(int id)
         {
-            return null;
+            var restClient = new RestClient("http://localhost:5000");
+            var request = new RestRequest($"api/medicines/{id}", Method.DELETE);
+            restClient.Execute(request);
+
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

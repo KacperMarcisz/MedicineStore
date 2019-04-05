@@ -12,5 +12,6 @@ namespace MedicineStore.API.Data
         Task<Image> GetImageAsync(int id);
         Task<bool> SaveAllAsync();
         Task AddMedicineAsync(Medicine medicine);
+        Task DeleteAsync(int id);
     }
 }

@@ -28,6 +28,14 @@ namespace MedicineStore.API.Data
             await _context.SaveChangesAsync();
         }
 
+        public async Task DeleteAsync(int id)
+        {
+            var medicine = _context.Medicines.Single(x => x.Id == id);
+            medicine.IsDeleted = true;
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<Medicine> GetMedicineAsync(int id)
         {
             return await _context.Medicines.SingleAsync(x => x.Id == id);

@@ -23,6 +23,7 @@
                                 <div class="btn-group">
                                     <a href="@Url.Action("MedicineDetails", new { id = medicine.Id})"><button type="button" class="btn btn-sm btn-outline-secondary">Details</button></a>
                                     <a href="@Url.Action("EditMedicine", new { id = medicine.Id})"><button type="button" class="btn btn-sm btn-outline-secondary">Edit</button></a>
+                                    <a href="@Url.Action("DeleteMedicine", new { id = medicine.Id})"><button type="button" class="btn btn-sm btn-outline-secondary">Delete</button></a>
                                 </div>
                                 <div>
                                     @if (medicine.SpecialGrossPrice != 0.0m)
