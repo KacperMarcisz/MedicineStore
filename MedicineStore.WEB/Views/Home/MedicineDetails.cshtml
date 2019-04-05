@@ -11,38 +11,32 @@
         
     </div>
     <div class="col-md-8 order-md-1">
-        <h4 class="mb-3">Add medicine</h4>
-        <form class="">
+        <h4 class="mb-3">Medicine details</h4>
             <div class="mb-3">
-                <label for="name">Name</label>
+                <label for="name">Name:</label>
                 <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"></span>
-                    </div>
-                    <input type="text" class="form-control" id="name" placeholder="Name" required>
+                    @Model.Name
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="grossPrice">Gross Price</label>
-                    <input type="text" class="form-control" id="grossPrice" placeholder="Gross price" value="" required>
+                    @Model.GrossPrice.ToString("F") zł
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="specialPrice">Special price <span class="text-muted">(Optional)</span></label>
-                    <input type="text" class="form-control" id="specialPrice" placeholder="Special price" value="">
+                    <label for="specialPrice">Special price</label>
+                    @Model.SpecialGrossPrice.ToString("F") zł
                 </div>
             </div>
             <div class="mb-3">
                 <label for="name">Description</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <span class="input-group-text"></span>
                     </div>
-                    <input type="text" class="form-control" id="description" placeholder="Description" required>
+                    @Model.Description
                 </div>
             </div>
 
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
-        </form>
+            <a href="@Url.Action("Index")"><button class="btn btn-primary btn-lg btn-block" type="button">Return</button></a>
     </div>
 </div>
