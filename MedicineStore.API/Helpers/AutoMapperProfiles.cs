@@ -18,7 +18,8 @@
                 .ForMember(dest => dest.ImageUrl, opt =>
                 {
                     opt.MapFrom(src => src.Images.FirstOrDefault(x => x.IsMain).Url);
-                });;
+                });
+            CreateMap<AddMedicineViewModel, Medicine>();
         }
     }
 }

@@ -7,11 +7,19 @@ using System.Threading.Tasks;
 namespace MedicineStore.WEB.Controllers
 {
     using CORE.ViewModels;
+    using FluentValidation;
     using Microsoft.AspNetCore.Http;
     using RestSharp;
 
     public class HomeController : Controller
     {
+        private IValidator<AddMedicineViewModel> _addMedicineValidator;
+
+        public HomeController(IValidator<AddMedicineViewModel> addMedicineValidator)
+        {
+            _addMedicineValidator = addMedicineValidator;
+        }
+
         public async Task<IActionResult> Index()
         {
             var restClient = new RestClient("http://localhost:5000");
@@ -23,7 +31,31 @@ namespace MedicineStore.WEB.Controllers
 
         public IActionResult AddMedicine()
         {
-            return View();
+            return View(new AddMedicineViewModel());
+        }
+
+        [HttpPost]
+        public IActionResult AddMedicine(AddMedicineViewModel model)
+        {
+            var validationResult = _addMedicineValidator.Validate(model);
+
+            if (!validationResult.IsValid)
+            {
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+
+                return View(model);
+            }
+
+            var restClient = new RestClient("http://localhost:5000");
+            var request = new RestRequest("api/medicines", Method.POST);
+            request.RequestFormat = DataFormat.Json;
+            request.AddBody(model);
+            var response = restClient.Execute(request);
+            
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> MedicineDetails(int id)

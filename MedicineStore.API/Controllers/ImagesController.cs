@@ -2,17 +2,17 @@
 
 namespace MedicineStore.API.Controllers
 {
-    using System.Threading.Tasks;
     using AutoMapper;
-    using Helpers;
-    using Microsoft.Extensions.Options;
     using CloudinaryDotNet;
     using CloudinaryDotNet.Actions;
     using CORE.ViewModels;
     using Data;
+    using Helpers;
     using Microsoft.EntityFrameworkCore.Internal;
+    using Microsoft.Extensions.Options;
     using Models;
     using System.Linq;
+    using System.Threading.Tasks;
 
     [Route("api/{controller}")]
     [ApiController]
@@ -42,7 +42,7 @@ namespace MedicineStore.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetImage(int id)
         {
-            var imageFromRepo = await _repo.GetImage(id);
+            var imageFromRepo = await _repo.GetImageAsync(id);
             var image = _mapper.Map<ImageViewModel>(imageFromRepo);
 
             return Ok(image);
@@ -52,7 +52,7 @@ namespace MedicineStore.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddImageForMedicine(int medicineId, ImageViewModel model)
         {
-            var medicine = await _repo.GetMedicine(medicineId);
+            var medicine = await _repo.GetMedicineAsync(medicineId);
 
             var file = model.File;
             var uploadResult = new ImageUploadResult();
@@ -84,7 +84,7 @@ namespace MedicineStore.API.Controllers
 
             medicine.Images.Add(image);
 
-            if (await _repo.SaveAll())
+            if (await _repo.SaveAllAsync())
             {
                 var imageToReturn = _mapper.Map<ImageViewModel>(image);
                 return CreatedAtRoute("GetImage", new { id = image.Id }, imageToReturn);

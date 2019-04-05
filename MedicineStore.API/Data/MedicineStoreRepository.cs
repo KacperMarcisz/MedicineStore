@@ -17,22 +17,28 @@ namespace MedicineStore.API.Data
             this._context = context;
         }
 
-        public async Task<IEnumerable<Medicine>> GetAllMedicines()
+        public async Task<IEnumerable<Medicine>> GetAllMedicinesAsync()
         {
             return await _context.Medicines.Include(x => x.Images).Where(x => x.IsActive && !x.IsDeleted).ToListAsync();
         }
 
-        public async Task<Medicine> GetMedicine(int id)
+        public async Task AddMedicineAsync(Medicine medicine)
+        {
+            await _context.Medicines.AddAsync(medicine);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Medicine> GetMedicineAsync(int id)
         {
             return await _context.Medicines.SingleAsync(x => x.Id == id);
         }
 
-        public async Task<Image> GetImage(int id)
+        public async Task<Image> GetImageAsync(int id)
         {
             return await _context.Images.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<bool> SaveAll()
+        public async Task<bool> SaveAllAsync()
         {
             return await _context.SaveChangesAsync() > 0;
         }

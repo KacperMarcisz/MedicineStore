@@ -7,9 +7,10 @@ namespace MedicineStore.API.Data
 
     public interface IMedicineStoreRepository
     {
-        Task<IEnumerable<Medicine>> GetAllMedicines();
-        Task<Medicine> GetMedicine(int id);
-        Task<Image> GetImage(int id);
-        Task<bool> SaveAll();
+        Task<IEnumerable<Medicine>> GetAllMedicinesAsync();
+        Task<Medicine> GetMedicineAsync(int id);
+        Task<Image> GetImageAsync(int id);
+        Task<bool> SaveAllAsync();
+        Task AddMedicineAsync(Medicine medicine);
     }
 }
