@@ -6,6 +6,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     [Route("api/[controller]")]
@@ -58,10 +59,12 @@
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] MedicineDetailsViewModel model)
+        public async Task<IActionResult> Put(int id, [FromBody] EditMedicineViewModel model)
         {
             var medicineFromRepo = await _repo.GetMedicineAsync(id);
+            var imagesFromRepo = medicineFromRepo.Images.ToList();
             _mapper.Map(model, medicineFromRepo);
+            medicineFromRepo.Images = imagesFromRepo;
 
             if (await _repo.SaveAllAsync())
                 return NoContent();
@@ -72,14 +75,9 @@
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var medicineFromRepo = await _repo.GetMedicineAsync(id);
+            await _repo.DeleteAsync(id);
 
-            _repo.Delete(medicineFromRepo);
-
-            if (await _repo.SaveAllAsync())
-                return Ok();
-
-            return BadRequest("Failed to delete the image");
+            return Ok();
         }
 
         [HttpPost("mainImage/{medicineId}/{imageId}")]

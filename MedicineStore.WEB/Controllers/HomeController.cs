@@ -9,22 +9,25 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public class HomeController : Controller
     {
         private readonly IValidator<AddMedicineViewModel> _addMedicineValidator;
+        private readonly IValidator<EditMedicineViewModel> _editMedicineValidator;
 
-        public HomeController(IValidator<AddMedicineViewModel> addMedicineValidator)
+        public HomeController(IValidator<AddMedicineViewModel> addMedicineValidator, IValidator<EditMedicineViewModel> editMedicineValidator)
         {
             _addMedicineValidator = addMedicineValidator;
+            _editMedicineValidator = editMedicineValidator;
         }
 
         public async Task<IActionResult> Index()
         {
             var restClient = new RestClient("http://localhost:5000");
             var request = new RestRequest("api/medicines", Method.GET);
-            var result = restClient.Execute<List<MedicineHeaderViewModel>>(request).Data;
+            var result = (await restClient.ExecuteTaskAsync<List<MedicineHeaderViewModel>>(request)).Data;
 
             return View(result);
         }
@@ -35,7 +38,7 @@
         }
 
         [HttpPost]
-        public IActionResult AddMedicine(AddMedicineViewModel model)
+        public async Task<IActionResult> AddMedicine(AddMedicineViewModel model)
         {
             var validationResult = _addMedicineValidator.Validate(model);
 
@@ -53,7 +56,7 @@
             var request = new RestRequest("api/medicines", Method.POST);
             request.RequestFormat = DataFormat.Json;
             request.AddBody(model);
-            var response = restClient.Execute(request);
+            await restClient.ExecuteTaskAsync(request);
 
             return RedirectToAction("Index");
         }
@@ -62,7 +65,7 @@
         {
             var restClient = new RestClient("http://localhost:5000");
             var request = new RestRequest($"api/medicines/{id}", Method.GET);
-            var result = restClient.Execute<MedicineDetailsViewModel>(request).Data;
+            var result = (await restClient.ExecuteTaskAsync<MedicineDetailsViewModel>(request)).Data;
 
             return View(result);
         }
@@ -71,21 +74,33 @@
         {
             var restClient = new RestClient("http://localhost:5000");
             var request = new RestRequest($"api/medicines/edit/{id}", Method.GET);
-            var result = restClient.Execute<EditMedicineViewModel>(request).Data;
+            var result = (await restClient.ExecuteTaskAsync<EditMedicineViewModel>(request)).Data;
 
             return View(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditMedicine(MedicineDetailsViewModel model)
+        public async Task<IActionResult> EditMedicine(EditMedicineViewModel model)
         {
+            var validationResult = _editMedicineValidator.Validate(model);
+
+            if (!validationResult.IsValid)
+            {
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+
+                return View(model);
+            }
+
             var restClient = new RestClient("http://localhost:5000");
             var request = new RestRequest($"api/medicines/{model.Id}", Method.PUT)
             {
                 RequestFormat = DataFormat.Json
             };
             request.AddBody(model);
-            restClient.Execute<MedicineDetailsViewModel>(request);
+            await restClient.ExecuteTaskAsync<EditMedicineViewModel>(request);
 
             return RedirectToAction("Index");
         }
@@ -105,7 +120,7 @@
                 var request = new RestRequest($"api/images/{id}", Method.POST);
                 request.AddFileBytes("imageName", data, "ImageFileName");
                 request.AddHeader("Content-Type", "multipart/form-data");
-                restClient.Execute(request);
+                await restClient.ExecuteTaskAsync(request);
             }
 
             return RedirectToAction("Index");
@@ -115,25 +130,25 @@
         {
             var restClient = new RestClient("http://localhost:5000");
             var request = new RestRequest($"api/medicines/{id}", Method.DELETE);
-            restClient.Execute(request);
+            await restClient.ExecuteTaskAsync(request);
 
             return RedirectToAction("Index");
         }
 
-        public ActionResult SetMainImage(int medicineId, string imagePublicId)
+        public async Task<IActionResult> SetMainImage(int medicineId, string imagePublicId)
         {
             var restClient = new RestClient("http://localhost:5000");
             var request = new RestRequest($"api/medicines/mainImage/{medicineId}/{imagePublicId}", Method.POST);
-            restClient.Execute(request);
+            await restClient.ExecuteTaskAsync(request);
 
             return RedirectToAction("EditMedicine", new { id = medicineId });
         }
 
-        public ActionResult DeleteImage(int medicineId, string imagePublicId)
+        public async Task<IActionResult> DeleteImage(int medicineId, string imagePublicId)
         {
             var restClient = new RestClient("http://localhost:5000");
             var request = new RestRequest($"api/images/{imagePublicId}", Method.DELETE);
-            restClient.Execute(request);
+            await restClient.ExecuteTaskAsync(request);
 
             return RedirectToAction("EditMedicine", new { id = medicineId });
         }

@@ -32,6 +32,7 @@ namespace MedicineStore.WEB
             
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddTransient<IValidator<AddMedicineViewModel>, AddMedicineViewModelValidator>();
+            services.AddTransient<IValidator<EditMedicineViewModel>, EditMedicineViewModelValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

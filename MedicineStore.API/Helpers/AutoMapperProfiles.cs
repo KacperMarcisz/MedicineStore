@@ -26,6 +26,11 @@
                 {
                     opt.MapFrom(src => src.Images.ToList());
                 });
+            CreateMap<Medicine, EditMedicineViewModel>()
+                .ForMember(dest => dest.Images, opt =>
+                {
+                    opt.MapFrom(src => src.Images);
+                });
             CreateMap<Image, ImageViewModel>();
             CreateMap<ImageViewModel, Image>();
         }

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace MedicineStore.API.Controllers
+﻿namespace MedicineStore.API.Controllers
 {
     using AutoMapper;
     using CloudinaryDotNet;
@@ -8,7 +6,7 @@ namespace MedicineStore.API.Controllers
     using CORE.ViewModels;
     using Data;
     using Helpers;
-    using Microsoft.EntityFrameworkCore.Internal;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
     using Models;
     using System.Linq;
@@ -18,7 +16,7 @@ namespace MedicineStore.API.Controllers
     [ApiController]
     public class ImagesController : ControllerBase
     {
-        private IMedicineStoreRepository _repo;
+        private readonly IMedicineStoreRepository _repo;
         private IMapper _mapper { get; }
         private IOptions<CloudinarySettings> _cloudinaryConfig { get; }
         private readonly Cloudinary _cloudinary;
@@ -30,7 +28,7 @@ namespace MedicineStore.API.Controllers
             _mapper = mapper;
             _repo = repo;
 
-            Account acc = new Account(
+            var acc = new Account(
                 _cloudinaryConfig.Value.CloudName,
                 _cloudinaryConfig.Value.ApiKey,
                 _cloudinaryConfig.Value.ApiSecret
