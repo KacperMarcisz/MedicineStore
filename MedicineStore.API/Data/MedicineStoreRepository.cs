@@ -17,6 +17,11 @@ namespace MedicineStore.API.Data
             this._context = context;
         }
 
+        public async Task AddMedicinesRange(IEnumerable<Medicine> medicines)
+        {
+            await _context.Medicines.AddRangeAsync(medicines);
+        }
+
         public void Delete<T>(T entity) where T : class
         {
             _context.Remove(entity);

@@ -7,6 +7,7 @@ namespace MedicineStore.API.Data
 
     public interface IMedicineStoreRepository
     {
+        Task AddMedicinesRange(IEnumerable<Medicine> medicines);
         void Delete<T>(T entity) where T : class;
         Task<IEnumerable<Medicine>> GetAllMedicinesAsync();
         Task<Medicine> GetMedicineAsync(int id);

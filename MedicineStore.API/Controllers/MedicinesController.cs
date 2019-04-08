@@ -100,5 +100,19 @@
 
             return BadRequest("Could not set image to main");
         }
+
+        [HttpPost("migrateData")]
+        public async Task<IActionResult> MigrateMedicines(IEnumerable<AddMedicineViewModel> model)
+        {
+            var medicines = _mapper.Map<List<Medicine>>(model);
+            await _repo.AddMedicinesRange(medicines);
+
+            if (await _repo.SaveAllAsync())
+            {
+                return NoContent();
+            }
+
+            return BadRequest();
+        }
     }
 }

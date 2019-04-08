@@ -20,6 +20,7 @@
                     opt.MapFrom(src => src.Images.FirstOrDefault(x => x.IsMain).Url);
                 });
             CreateMap<AddMedicineViewModel, Medicine>();
+            CreateMap<Medicine, AddMedicineViewModel>();
             CreateMap<MedicineDetailsViewModel, Medicine>();
             CreateMap<EditMedicineViewModel, Medicine>()
                 .ForMember(dest => dest.Images, opt =>

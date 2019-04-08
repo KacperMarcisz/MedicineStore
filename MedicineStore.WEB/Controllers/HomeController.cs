@@ -1,6 +1,7 @@
 ﻿namespace MedicineStore.WEB.Controllers
 {
     using CORE.ViewModels;
+    using CsvHelper;
     using FluentValidation;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using System.Threading;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class HomeController : Controller
@@ -151,6 +152,38 @@
             await restClient.ExecuteTaskAsync(request);
 
             return RedirectToAction("EditMedicine", new { id = medicineId });
+        }
+
+        public ActionResult MigrateMedicines()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MigrateMedicines(List<IFormFile> files)
+        {
+            foreach (var file in files)
+            {
+                var reader = new StreamReader(file.OpenReadStream());
+                var csvReader = new CsvReader(reader);
+                var records = csvReader.GetRecords<MigrateMedicinesViewModel>();
+
+                var model = records.Select(x => new AddMedicineViewModel
+                {
+                    GrossPrice = x.GrossPrice,
+                    Name = x.Name,
+                    Description = x.Description,
+                    SpecialGrossPrice = x.SpecialGrossPrice
+                }).ToList();
+
+                var restClient = new RestClient("http://localhost:5000");
+                var request = new RestRequest($"api/medicines/migrateData", Method.POST);
+                request.RequestFormat = DataFormat.Json;
+                request.AddBody(model);
+                await restClient.ExecuteTaskAsync(request);
+            }
+
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
