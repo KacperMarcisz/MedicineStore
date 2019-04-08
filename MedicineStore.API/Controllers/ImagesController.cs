@@ -48,49 +48,75 @@ namespace MedicineStore.API.Controllers
             return Ok(image);
         }
 
-        [Route("{medicineId}/AddImageForMedicine")]
-        [HttpPost]
-        public async Task<IActionResult> AddImageForMedicine(int medicineId, ImageViewModel model)
+        [HttpPost("{medicineId}")]
+        public async Task<IActionResult> AddImageForMedicine(int medicineId)
         {
-            var medicine = await _repo.GetMedicineAsync(medicineId);
-
-            var file = model.File;
-            var uploadResult = new ImageUploadResult();
-
-            if (file.Length > 0)
+            if (Request.HasFormContentType)
             {
-                using (var stream = file.OpenReadStream())
+                var form = Request.Form;
+                foreach (var formFile in form.Files)
                 {
-                    var uploadParams = new ImageUploadParams()
-                    {
-                        File = new FileDescription(file.Name, stream),
-                        Transformation = new Transformation().Width(500).Height(500).Crop("fill")
-                    };
+                    var medicine = await _repo.GetMedicineAsync(medicineId);
+                    var model = new ImageViewModel();
 
-                    uploadResult = _cloudinary.Upload(uploadParams);
+                    var file = formFile;
+                    var uploadResult = new ImageUploadResult();
+
+                    if (file.Length > 0)
+                    {
+                        using (var stream = file.OpenReadStream())
+                        {
+                            var uploadParams = new ImageUploadParams()
+                            {
+                                File = new FileDescription(file.Name, stream),
+                                Transformation = new Transformation().Width(500).Height(500).Crop("fill")
+                            };
+
+                            uploadResult = _cloudinary.Upload(uploadParams);
+                        }
+                    }
+
+                    model.Url = uploadResult.Uri.ToString();
+                    model.PublicId = uploadResult.PublicId;
+
+                    var image = _mapper.Map<Image>(model);
+                    image.MedicineId = medicineId;
+
+                    if (!medicine.Images.Any(x => x.IsMain))
+                    {
+                        image.IsMain = true;
+                    }
+
+                    medicine.Images.Add(image);
+
+                    if (await _repo.SaveAllAsync())
+                    {
+                        var imageToReturn = _mapper.Map<ImageViewModel>(image);
+                        return CreatedAtRoute("GetImage", new { id = image.Id }, imageToReturn);
+                    }
                 }
             }
 
-            model.Url = uploadResult.Uri.ToString();
-            model.PublicId = uploadResult.PublicId;
+            return BadRequest("Could not add image");
+        }
 
-            var image = _mapper.Map<Image>(model);
-            image.MedicineId = medicineId;
+        [HttpDelete("{imagePublicId}")]
+        public async Task<IActionResult> DeleteImage(string imagePublicId)
+        {
+            var imageFromRepo = await _repo.GetImageAsync(imagePublicId);
+            if (imageFromRepo == null)
+                return NotFound();
+            
+            var deleteParams = new DeletionParams(imageFromRepo.PublicId);
+            var result = _cloudinary.Destroy(deleteParams);
 
-            if (!medicine.Images.Any(x => x.IsMain))
-            {
-                image.IsMain = true;
-            }
-
-            medicine.Images.Add(image);
+            if (result.Result == "ok")
+                _repo.Delete(imageFromRepo);
 
             if (await _repo.SaveAllAsync())
-            {
-                var imageToReturn = _mapper.Map<ImageViewModel>(image);
-                return CreatedAtRoute("GetImage", new { id = image.Id }, imageToReturn);
-            }
+                return Ok();
 
-            return BadRequest("Could not add image");
+            return BadRequest("Failed to delete the image");
         }
     }
 }

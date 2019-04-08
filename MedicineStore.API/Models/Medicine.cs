@@ -11,6 +11,6 @@
         public decimal? SpecialGrossPrice { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
-        public ICollection<Image> Images { get; set; }
+        public virtual ICollection<Image> Images { get; set; }
     }
 }

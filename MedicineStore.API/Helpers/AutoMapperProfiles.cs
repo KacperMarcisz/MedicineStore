@@ -21,6 +21,13 @@
                 });
             CreateMap<AddMedicineViewModel, Medicine>();
             CreateMap<MedicineDetailsViewModel, Medicine>();
+            CreateMap<EditMedicineViewModel, Medicine>()
+                .ForMember(dest => dest.Images, opt =>
+                {
+                    opt.MapFrom(src => src.Images.ToList());
+                });
+            CreateMap<Image, ImageViewModel>();
+            CreateMap<ImageViewModel, Image>();
         }
     }
 }

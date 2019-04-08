@@ -17,6 +17,11 @@ namespace MedicineStore.API.Data
             this._context = context;
         }
 
+        public void Delete<T>(T entity) where T : class
+        {
+            _context.Remove(entity);
+        }
+
         public async Task<IEnumerable<Medicine>> GetAllMedicinesAsync()
         {
             return await _context.Medicines.Include(x => x.Images).Where(x => x.IsActive && !x.IsDeleted).ToListAsync();
@@ -38,12 +43,27 @@ namespace MedicineStore.API.Data
 
         public async Task<Medicine> GetMedicineAsync(int id)
         {
-            return await _context.Medicines.SingleAsync(x => x.Id == id);
+            return await _context.Medicines.Include(x => x.Images).SingleAsync(x => x.Id == id);
         }
 
         public async Task<Image> GetImageAsync(int id)
         {
             return await _context.Images.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<Image> GetImageAsync(string imagePublicId)
+        {
+            return await _context.Images.FirstOrDefaultAsync(x => x.PublicId == imagePublicId);
+        }
+
+        public async Task<Image> GetMainImageAsync(int medicineId)
+        {
+            return await _context.Images.FirstOrDefaultAsync(x => x.MedicineId == medicineId && x.IsMain);
+        }
+
+        public async Task<Image> GetImageAsync(int id, string imageId)
+        {
+            return await _context.Images.FirstOrDefaultAsync(x => x.MedicineId == id && x.PublicId == imageId);
         }
 
         public async Task<bool> SaveAllAsync()

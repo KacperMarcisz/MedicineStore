@@ -9,6 +9,9 @@
             <span class="text-muted">Image</span>
         </h4>
         
+        <div>
+            <img class="card-img-top" src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "/default-pro.jpg" : Model.ImageUrl)" alt="@Model.Name">
+        </div>
     </div>
     <div class="col-md-8 order-md-1">
         <h4 class="mb-3">Medicine details</h4>

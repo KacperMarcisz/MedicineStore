@@ -39,12 +39,21 @@
             return Ok(medicine);
         }
 
+        [HttpGet("Edit/{id}")]
+        public async Task<IActionResult> GetEdit(int id)
+        {
+            var medicineFromRepo = await _repo.GetMedicineAsync(id);
+            var medicine = _mapper.Map<EditMedicineViewModel>(medicineFromRepo);
+
+            return Ok(medicine);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] AddMedicineViewModel model)
         {
             var medicine = _mapper.Map<Medicine>(model);
             await _repo.AddMedicineAsync(medicine);
-            
+
             return Ok();
         }
 
@@ -63,15 +72,35 @@
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _repo.DeleteAsync(id);
-            
-            return Ok();
+            var medicineFromRepo = await _repo.GetMedicineAsync(id);
+
+            _repo.Delete(medicineFromRepo);
+
+            if (await _repo.SaveAllAsync())
+                return Ok();
+
+            return BadRequest("Failed to delete the image");
         }
 
-        // [HttpPatch]
-        // public void Patch()
-        // {
+        [HttpPost("mainImage/{medicineId}/{imageId}")]
+        public async Task<IActionResult> SetMainImage(int medicineId, string imageId)
+        {
+            var imageFromRepo = await _repo.GetImageAsync(medicineId, imageId);
+            var currentMainImage = await _repo.GetMainImageAsync(medicineId);
 
-        // }
+            if (currentMainImage != null)
+            {
+                currentMainImage.IsMain = false;
+            }
+
+            imageFromRepo.IsMain = true;
+
+            if (await _repo.SaveAllAsync())
+            {
+                return NoContent();
+            }
+
+            return BadRequest("Could not set image to main");
+        }
     }
 }

@@ -1,19 +1,19 @@
-﻿using MedicineStore.WEB.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
-
-namespace MedicineStore.WEB.Controllers
+﻿namespace MedicineStore.WEB.Controllers
 {
     using CORE.ViewModels;
     using FluentValidation;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Models;
     using RestSharp;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Threading.Tasks;
 
     public class HomeController : Controller
     {
-        private IValidator<AddMedicineViewModel> _addMedicineValidator;
+        private readonly IValidator<AddMedicineViewModel> _addMedicineValidator;
 
         public HomeController(IValidator<AddMedicineViewModel> addMedicineValidator)
         {
@@ -54,7 +54,7 @@ namespace MedicineStore.WEB.Controllers
             request.RequestFormat = DataFormat.Json;
             request.AddBody(model);
             var response = restClient.Execute(request);
-            
+
             return RedirectToAction("Index");
         }
 
@@ -70,8 +70,8 @@ namespace MedicineStore.WEB.Controllers
         public async Task<IActionResult> EditMedicine(int id)
         {
             var restClient = new RestClient("http://localhost:5000");
-            var request = new RestRequest($"api/medicines/{id}", Method.GET);
-            var result = restClient.Execute<MedicineDetailsViewModel>(request).Data;
+            var request = new RestRequest($"api/medicines/edit/{id}", Method.GET);
+            var result = restClient.Execute<EditMedicineViewModel>(request).Data;
 
             return View(result);
         }
@@ -80,8 +80,10 @@ namespace MedicineStore.WEB.Controllers
         public async Task<IActionResult> EditMedicine(MedicineDetailsViewModel model)
         {
             var restClient = new RestClient("http://localhost:5000");
-            var request = new RestRequest($"api/medicines/{model.Id}", Method.PUT);
-            request.RequestFormat = DataFormat.Json;
+            var request = new RestRequest($"api/medicines/{model.Id}", Method.PUT)
+            {
+                RequestFormat = DataFormat.Json
+            };
             request.AddBody(model);
             restClient.Execute<MedicineDetailsViewModel>(request);
 
@@ -89,22 +91,26 @@ namespace MedicineStore.WEB.Controllers
         }
 
         [HttpPost("UploadFile")]
-        public async Task<IActionResult> UploadImage(List<IFormFile> files)
+        public async Task<IActionResult> UploadImage(int id, List<IFormFile> files)
         {
             foreach (var file in files)
             {
-                if (file.Length > 0)
+                byte[] data;
+                using (var br = new BinaryReader(file.OpenReadStream()))
                 {
-                    var restClient = new RestClient("http://localhost:5000");
-                    var request = new RestRequest($"api/images/AddImageForMedicine", Method.POST);
-                    request.AddParameter("model", new ImageViewModel { File = file });
-                    restClient.Execute(request);
+                    data = br.ReadBytes((int)file.OpenReadStream().Length);
                 }
+
+                var restClient = new RestClient("http://localhost:5000");
+                var request = new RestRequest($"api/images/{id}", Method.POST);
+                request.AddFileBytes("imageName", data, "ImageFileName");
+                request.AddHeader("Content-Type", "multipart/form-data");
+                restClient.Execute(request);
             }
 
-            return Ok();
+            return RedirectToAction("Index");
         }
-        
+
         public async Task<IActionResult> DeleteMedicine(int id)
         {
             var restClient = new RestClient("http://localhost:5000");
@@ -112,6 +118,24 @@ namespace MedicineStore.WEB.Controllers
             restClient.Execute(request);
 
             return RedirectToAction("Index");
+        }
+
+        public ActionResult SetMainImage(int medicineId, string imagePublicId)
+        {
+            var restClient = new RestClient("http://localhost:5000");
+            var request = new RestRequest($"api/medicines/mainImage/{medicineId}/{imagePublicId}", Method.POST);
+            restClient.Execute(request);
+
+            return RedirectToAction("EditMedicine", new { id = medicineId });
+        }
+
+        public ActionResult DeleteImage(int medicineId, string imagePublicId)
+        {
+            var restClient = new RestClient("http://localhost:5000");
+            var request = new RestRequest($"api/images/{imagePublicId}", Method.DELETE);
+            restClient.Execute(request);
+
+            return RedirectToAction("EditMedicine", new { id = medicineId });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
