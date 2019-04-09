@@ -80,7 +80,7 @@ namespace MedicineStore.API.Data
         {
             return await _context.Medicines
                 .Include(x => x.Images)
-                .Where(x => x.IsActive && !x.IsDeleted && (searchingPhrase.Contains(x.Name) || searchingPhrase.Contains(x.Description)))
+                .Where(x => x.IsActive && !x.IsDeleted && (x.Name.Contains(searchingPhrase) || x.Description.Contains(searchingPhrase)))
                 .ToListAsync();
         }
     }
