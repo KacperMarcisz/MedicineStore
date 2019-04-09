@@ -170,10 +170,10 @@
 
                 var model = records.Select(x => new AddMedicineViewModel
                 {
-                    GrossPrice = x.GrossPrice,
+                    GrossPrice = decimal.Parse(x.GrossPrice),
                     Name = x.Name,
                     Description = x.Description,
-                    SpecialGrossPrice = x.SpecialGrossPrice
+                    SpecialGrossPrice = decimal.Parse(x.SpecialGrossPrice)
                 }).ToList();
 
                 var restClient = new RestClient("http://localhost:5000");
@@ -184,6 +184,16 @@
             }
 
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Search(string searchingPhrase)
+        {
+            var restClient = new RestClient("http://localhost:5000");
+            var request = new RestRequest($"api/medicines/search/{searchingPhrase}", Method.GET);
+            var result = (await restClient.ExecuteTaskAsync<List<MedicineHeaderViewModel>>(request)).Data;
+
+            return View("Index", result);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

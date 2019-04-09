@@ -7,6 +7,15 @@
 <div>
     <a href="@Url.Action("AddMedicine")"><button type="button" class="btn btn-sm btn-success">Add medicine</button></a>
     <a href="@Url.Action("MigrateMedicines")"><button type="button" class="btn btn-sm btn-success">Migrate medicines</button></a>
+    
+    <form method="post" asp-action="search">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Search</span>
+            </div>
+            <input type="text" class="form-control" id="searchingPhrase" placeholder="search phrase - tap enter" value="" name="searchingPhrase">
+        </div>
+    </form>
 </div>
 
 <div class="album py-5 bg-light">

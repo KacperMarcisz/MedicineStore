@@ -4,7 +4,7 @@
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public decimal GrossPrice { get; set; }
-        public decimal SpecialGrossPrice { get; set; }
+        public string GrossPrice { get; set; }
+        public string SpecialGrossPrice { get; set; }
     }
 }
