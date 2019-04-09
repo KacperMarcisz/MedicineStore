@@ -124,7 +124,7 @@
                 await restClient.ExecuteTaskAsync(request);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("EditMedicine", new { id });
         }
 
         public async Task<IActionResult> DeleteMedicine(int id)
