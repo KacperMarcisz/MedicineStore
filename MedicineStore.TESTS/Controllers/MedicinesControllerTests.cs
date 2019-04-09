@@ -62,6 +62,75 @@ namespace MedicineStore.TESTS.Controllers
             Assert.NotNull(result);
         }
 
+        [Fact]
+        public async Task MigrateMedicines_CorrectData_StatusCode()
+        {
+            // Arrange
+            var mock = new Mock<IMedicineStoreRepository>();
+            var mockMapper = new Mock<IMapper>();
+
+            mock.Setup(x => x.AddMedicinesRange(It.IsAny<List<Medicine>>()))
+                .Returns(() => Task.CompletedTask);
+            mock.Setup(x => x.SaveAllAsync())
+                .Returns(() => Task.FromResult(true));
+            mockMapper.Setup(x => x.Map<List<Medicine>>(It.IsAny<IEnumerable<AddMedicineViewModel>>()))
+                .Returns(() => It.IsAny<List<Medicine>>());
+
+            var controller = new MedicinesController(mock.Object, mockMapper.Object);
+
+            // Act
+            var actionResult = await controller.MigrateMedicines(It.IsAny<IEnumerable<AddMedicineViewModel>>()) as NoContentResult;
+
+            // Assert
+            Assert.Equal((int)HttpStatusCode.NoContent, actionResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task MigrateMedicines_InvalidData_StatusCode()
+        {
+            // Arrange
+            var mock = new Mock<IMedicineStoreRepository>();
+            var mockMapper = new Mock<IMapper>();
+
+            mock.Setup(x => x.AddMedicinesRange(It.IsAny<List<Medicine>>()))
+                .Returns(() => Task.CompletedTask);
+            mock.Setup(x => x.SaveAllAsync())
+                .Returns(() => Task.FromResult(false));
+            mockMapper.Setup(x => x.Map<List<Medicine>>(It.IsAny<IEnumerable<AddMedicineViewModel>>()))
+                .Returns(() => It.IsAny<List<Medicine>>());
+
+            var controller = new MedicinesController(mock.Object, mockMapper.Object);
+
+            // Act
+            var actionResult = await controller.MigrateMedicines(It.IsAny<IEnumerable<AddMedicineViewModel>>()) as BadRequestResult;
+
+            // Assert
+            Assert.Equal((int)HttpStatusCode.BadRequest, actionResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task Search_CorrectData_MedicineHeaderViewModelListAsync()
+        {
+            // Arrange
+            var mock = new Mock<IMedicineStoreRepository>();
+            var mockMapper = new Mock<IMapper>();
+
+            mock.Setup(x => x.GetMedicinesAsync(It.IsAny<string>()))
+                .Returns(() => Task.FromResult(GetMedicineList()));
+            mockMapper.Setup(x => x.Map<IEnumerable<MedicineHeaderViewModel>>(It.IsAny<List<Medicine>>()))
+                .Returns(() => GetMedicineHeaderViewModel());
+
+            var controller = new MedicinesController(mock.Object, mockMapper.Object);
+
+            // Act
+            var actionResult = await controller.Search(It.IsAny<string>()) as OkObjectResult;
+            var result = actionResult.Value as List<MedicineHeaderViewModel>;
+
+            // Assert
+            Assert.Equal((int)HttpStatusCode.OK, actionResult.StatusCode);
+            Assert.Equal(2, result.Count);
+        }
+
         private List<Medicine> GetMedicineList(int id = 0)
         {
             var list = new List<Medicine>

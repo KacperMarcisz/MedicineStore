@@ -18,6 +18,6 @@ namespace MedicineStore.API.Data
         Task<Image> GetMainImageAsync(int medicineId);
         Task<Image> GetImageAsync(int id, string imageId);
         Task<Image> GetImageAsync(string imagePublicId);
-        Task<IEnumerable<Medicine>> GetMedicinesAsync(string searchingPhrase);
+        Task<List<Medicine>> GetMedicinesAsync(string searchingPhrase);
     }
 }

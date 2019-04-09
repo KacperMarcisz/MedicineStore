@@ -76,7 +76,7 @@ namespace MedicineStore.API.Data
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<IEnumerable<Medicine>> GetMedicinesAsync(string searchingPhrase)
+        public async Task<List<Medicine>> GetMedicinesAsync(string searchingPhrase)
         {
             return await _context.Medicines
                 .Include(x => x.Images)

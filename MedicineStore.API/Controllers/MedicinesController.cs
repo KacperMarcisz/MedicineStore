@@ -120,7 +120,7 @@
         {
             var medicinesFromRepo = await _repo.GetMedicinesAsync(searchingPhrase);
             var medicines = _mapper.Map<IEnumerable<MedicineHeaderViewModel>>(medicinesFromRepo);
-
+            
             return Ok(medicines);
         }
     }
