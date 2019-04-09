@@ -27,7 +27,7 @@ namespace MedicineStore.API.Data
             _context.Remove(entity);
         }
 
-        public async Task<IEnumerable<Medicine>> GetAllMedicinesAsync()
+        public async Task<List<Medicine>> GetAllMedicinesAsync()
         {
             return await _context.Medicines.Include(x => x.Images).Where(x => x.IsActive && !x.IsDeleted).ToListAsync();
         }

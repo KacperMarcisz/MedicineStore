@@ -9,7 +9,7 @@ namespace MedicineStore.API.Data
     {
         Task AddMedicinesRange(IEnumerable<Medicine> medicines);
         void Delete<T>(T entity) where T : class;
-        Task<IEnumerable<Medicine>> GetAllMedicinesAsync();
+        Task<List<Medicine>> GetAllMedicinesAsync();
         Task<Medicine> GetMedicineAsync(int id);
         Task<Image> GetImageAsync(int id);
         Task<bool> SaveAllAsync();
